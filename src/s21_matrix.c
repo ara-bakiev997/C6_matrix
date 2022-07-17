@@ -3,12 +3,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+/*Все операции (кроме сравнения матриц) должны возвращать результирующий код:
+0 - OK
+1 - Ошибка, некорректная матрица
+2 - Ошибка вычисления (несовпадающие размеры матриц; матрица, для которой нельзя
+провести вычисления и т.д.)*/
+
 int main() {
   matrix_t mtr = {0};
   matrix_t mtr2 = {0};
-  int rows = 5;
-  int columns = 5;
-  int columns2 = 4;
+  int rows = 2;
+  int columns = 3;
+  int columns2 = 3;
   s21_create_matrix(rows, columns, &mtr);
   s21_create_matrix(rows, columns2, &mtr2);
   for (int i = 0; i < mtr.rows; i++) {
@@ -21,9 +27,12 @@ int main() {
       mtr2.matrix[i][j] = j;
     }
   }
-  int res = s21_eq_matrix(&mtr, &mtr2);
-  printf("RESULT=%s\n", (res) ? "SUCCESS" : "FAILURE");
-  // printMatrix(mtr);
+  printMatrix(mtr);
+  printf("\n");
+  printMatrix(mtr2);
+  int res = s21_sub_matrix(&mtr, &mtr2, &mtr);
+  printf("RESULT=%d\n", res);  //(res) ? "SUCCESS" : "FAILURE"
+  printMatrix(mtr);
   s21_remove_matrix(&mtr);
   s21_remove_matrix(&mtr2);
 
@@ -63,6 +72,36 @@ int s21_eq_matrix(matrix_t *A, matrix_t *B) {
     }
   }
   return result;
+}
+
+int s21_sum_matrix(matrix_t *A, matrix_t *B, matrix_t *result) {
+  int error = 0;
+  error = (A->matrix == NULL || B->matrix == NULL)           ? 1
+          : (A->columns != B->columns || A->rows != B->rows) ? 2
+                                                             : 0;
+  if (!error) {
+    for (int i = 0; i < A->rows; i++) {
+      for (int j = 0; j < A->columns; j++) {
+        result->matrix[i][j] = A->matrix[i][j] + B->matrix[i][j];
+      }
+    }
+  }
+  return error;
+}
+
+int s21_sub_matrix(matrix_t *A, matrix_t *B, matrix_t *result) {
+  int error = 0;
+  error = (A->matrix == NULL || B->matrix == NULL)           ? 1
+          : (A->columns != B->columns || A->rows != B->rows) ? 2
+                                                             : 0;
+  if (!error) {
+    for (int i = 0; i < A->rows; i++) {
+      for (int j = 0; j < A->columns; j++) {
+        result->matrix[i][j] = A->matrix[i][j] - B->matrix[i][j];
+      }
+    }
+  }
+  return error;
 }
 
 /*__________________ANOTHER_FUNCTIONS___________________*/
