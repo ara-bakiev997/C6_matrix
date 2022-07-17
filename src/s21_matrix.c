@@ -14,23 +14,26 @@ int main() {
   matrix_t mtr2 = {0};
   int rows = 2;
   int columns = 3;
-  int columns2 = 3;
+  // int columns2 = 3;
+  double num = 0.5;
   s21_create_matrix(rows, columns, &mtr);
-  s21_create_matrix(rows, columns2, &mtr2);
+  // s21_create_matrix(rows, columns2, &mtr2);
   for (int i = 0; i < mtr.rows; i++) {
     for (int j = 0; j < mtr.columns; j++) {
       mtr.matrix[i][j] = j;
     }
   }
-  for (int i = 0; i < mtr2.rows; i++) {
-    for (int j = 0; j < mtr2.columns; j++) {
-      mtr2.matrix[i][j] = j;
-    }
-  }
+  // for (int i = 0; i < mtr2.rows; i++) {
+  //   for (int j = 0; j < mtr2.columns; j++) {
+  //     mtr2.matrix[i][j] = j;
+  //   }
+  // }
   printMatrix(mtr);
   printf("\n");
-  printMatrix(mtr2);
-  int res = s21_sub_matrix(&mtr, &mtr2, &mtr);
+  // printMatrix(mtr2);
+  // int res = s21_sub_matrix(&mtr, &mtr2, &mtr);
+  int res = s21_mult_number(&mtr, num, &mtr);
+
   printf("RESULT=%d\n", res);  //(res) ? "SUCCESS" : "FAILURE"
   printMatrix(mtr);
   s21_remove_matrix(&mtr);
@@ -65,7 +68,8 @@ void s21_remove_matrix(matrix_t *A) {
 
 int s21_eq_matrix(matrix_t *A, matrix_t *B) {
   int result = SUCCESS;
-  if (A->rows != B->rows || A->columns != B->columns) result = FAILURE;
+  if (A == NULL || B == NULL || A->rows != B->rows || A->columns != B->columns)
+    result = FAILURE;
   for (int i = 0; i < A->rows && result; i++) {
     for (int j = 0; j < A->columns && result; j++) {
       if (A->matrix[i][j] != B->matrix[i][j]) result = FAILURE;
@@ -98,6 +102,19 @@ int s21_sub_matrix(matrix_t *A, matrix_t *B, matrix_t *result) {
     for (int i = 0; i < A->rows; i++) {
       for (int j = 0; j < A->columns; j++) {
         result->matrix[i][j] = A->matrix[i][j] - B->matrix[i][j];
+      }
+    }
+  }
+  return error;
+}
+
+int s21_mult_number(matrix_t *A, double number, matrix_t *result) {
+  int error = 0;
+  error = (A->matrix == NULL) ? 1 : 0;
+  if (!error) {
+    for (int i = 0; i < A->rows; i++) {
+      for (int j = 0; j < A->columns; j++) {
+        result->matrix[i][j] = A->matrix[i][j] * number;
       }
     }
   }
