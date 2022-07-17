@@ -20,6 +20,16 @@ test: s21_matrix.a
 	$(GCC) matrix_test.c $(SOURCE) -o test $(CHECK_H) $(GCOVFLAGS)
 	./test
 
+test_:
+	clear
+	@$(GCC) s21_matrix.c -o test
+	@./test
+
+git:
+	git add Makefile matrix_test.c s21_matrix.c s21_matrix.h
+	git commit -m "17.07.22"
+	git push origin tysaneno
+
 s21_matrix.a: clean $(OBJ)
 	ar rcs s21_matrix.a $(OBJ)
 
