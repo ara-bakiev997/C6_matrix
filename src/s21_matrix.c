@@ -12,30 +12,35 @@
 int main() {
   matrix_t mtr = {0};
   matrix_t mtr2 = {0};
-  int rows = 2;
+  matrix_t mtr3 = {0};
+  int rows = 3;
   int columns = 3;
-  // int columns2 = 3;
-  double num = 0.5;
+  int rows2 = 3;
+  int columns2 = 3;
+  // double num = 0.5;
   s21_create_matrix(rows, columns, &mtr);
-  // s21_create_matrix(rows, columns2, &mtr2);
+  s21_create_matrix(rows2, columns2, &mtr2);
   for (int i = 0; i < mtr.rows; i++) {
     for (int j = 0; j < mtr.columns; j++) {
       mtr.matrix[i][j] = j;
     }
   }
-  // for (int i = 0; i < mtr2.rows; i++) {
-  //   for (int j = 0; j < mtr2.columns; j++) {
-  //     mtr2.matrix[i][j] = j;
-  //   }
-  // }
+  for (int i = 0; i < mtr2.rows; i++) {
+    for (int j = 0; j < mtr2.columns; j++) {
+      mtr2.matrix[i][j] = j;
+    }
+  }
   printMatrix(mtr);
   printf("\n");
-  // printMatrix(mtr2);
-  // int res = s21_sub_matrix(&mtr, &mtr2, &mtr);
-  int res = s21_mult_number(&mtr, num, &mtr);
+  printMatrix(mtr2);
+  printf("\n");
+  // int res = s21_sum_matrix(&mtr, &mtr2, &mtr3);
+  // int res = s21_sub_matrix(&mtr, &mtr2, &mtr3);
+  // int res = s21_mult_number(&mtr, num, &mtr3);
+  int res = s21_mult_matrix(&mtr, &mtr2, &mtr3);
 
   printf("RESULT=%d\n", res);  //(res) ? "SUCCESS" : "FAILURE"
-  printMatrix(mtr);
+  printMatrix(mtr3);
   s21_remove_matrix(&mtr);
   s21_remove_matrix(&mtr2);
 
@@ -84,6 +89,7 @@ int s21_sum_matrix(matrix_t *A, matrix_t *B, matrix_t *result) {
           : (A->columns != B->columns || A->rows != B->rows) ? 2
                                                              : 0;
   if (!error) {
+    s21_create_matrix(A->rows, A->columns, result);
     for (int i = 0; i < A->rows; i++) {
       for (int j = 0; j < A->columns; j++) {
         result->matrix[i][j] = A->matrix[i][j] + B->matrix[i][j];
@@ -99,6 +105,7 @@ int s21_sub_matrix(matrix_t *A, matrix_t *B, matrix_t *result) {
           : (A->columns != B->columns || A->rows != B->rows) ? 2
                                                              : 0;
   if (!error) {
+    s21_create_matrix(A->rows, A->columns, result);
     for (int i = 0; i < A->rows; i++) {
       for (int j = 0; j < A->columns; j++) {
         result->matrix[i][j] = A->matrix[i][j] - B->matrix[i][j];
@@ -112,10 +119,36 @@ int s21_mult_number(matrix_t *A, double number, matrix_t *result) {
   int error = 0;
   error = (A->matrix == NULL) ? 1 : 0;
   if (!error) {
+    s21_create_matrix(A->rows, A->columns, result);
     for (int i = 0; i < A->rows; i++) {
       for (int j = 0; j < A->columns; j++) {
         result->matrix[i][j] = A->matrix[i][j] * number;
       }
+    }
+  }
+  return error;
+}
+
+int s21_mult_matrix(matrix_t *A, matrix_t *B, matrix_t *result) {
+  int error = 0;
+  error = (A->matrix == NULL || B->matrix == NULL) ? 1
+          : (A->columns != B->rows)                ? 2
+                                                   : 0;
+  if (!error) {
+    if (!s21_create_matrix(A->rows, B->columns, result)) {
+      double resTmp = 0;
+      for (int i = 0; i < A->rows; i++) {
+        for (int j = 0; j < B->columns; j++) {
+          for (int x = 0; x < A->rows; x++) {
+            for (int y = 0; y < B->columns; y++) {
+              resTmp += A->matrix[x][y] * B->matrix[y][x];
+            }
+          }
+          result->matrix[i][j] = resTmp;
+        }
+      }
+    } else {
+      error = 1;
     }
   }
   return error;
