@@ -14,7 +14,7 @@ int main() {
   // matrix_t mtr2 = {0};
   matrix_t mtr3 = {0};
   int rows = 5;
-  int columns = 1;
+  int columns = 4;
   // int rows2 = 2;
   // int columns2 = 3;
   // double num = 0.5;
@@ -192,6 +192,20 @@ int s21_transpose(matrix_t *A, matrix_t *result) {
   return error;
 }
 
+int s21_calc_complements(matrix_t *A, matrix_t *result) {
+  int error = 0;
+  if (A->matrix == NULL ||
+      s21_create_matrix(A->rows - 1, A->columns - 1, result))
+    error = 1;
+  if (!error) {
+    for (int i = 0; i < result->rows; i++) {
+      result->matrix
+    }
+  }
+
+  return error;
+}
+
 /*__________________ANOTHER_FUNCTIONS___________________*/
 void printMatrix(matrix_t src) {
   for (int i = 0; i < src.rows; i++) {
@@ -201,21 +215,3 @@ void printMatrix(matrix_t src) {
     printf("\n");
   }
 }
-
-// int s21_create_matrix_malloc(int rows, int columns, matrix_t *result) {
-//   int error = 0;
-//   result->rows = rows;
-//   result->columns = columns;
-//   double *lenStr = NULL;
-//   result->matrix = NULL;
-//   result->matrix =
-//       malloc(rows * sizeof(double *) + rows * columns * sizeof(double));
-//   if (result->matrix == NULL) error = 1;
-//   if (!error) {
-//     lenStr = (double *)(result->matrix + rows);
-//     for (int i = 0; i < rows; i++) {
-//       result->matrix[i] = lenStr + columns * i;
-//     }
-//   }
-//   return error;
-// }
