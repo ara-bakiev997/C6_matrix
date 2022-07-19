@@ -24,6 +24,10 @@ int s21_determinant(matrix_t *A, double *result);
 int s21_inverse_matrix(matrix_t *A, matrix_t *result);
 
 /*__________________ANOTHER_FUNCTIONS___________________*/
+void GetMiniMatr(matrix_t *A, int x, int y, matrix_t *result);
+int swapStr(matrix_t *A, int x, int y, matrix_t *result);
+
+/*____________________PRINT_FUNCTIONS___________________*/
 void printMatrix(matrix_t src);
 
 #endif  // SRC_S21_MATRIX_H_
