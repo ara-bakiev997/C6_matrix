@@ -15,46 +15,32 @@ int main() {
   matrix_t mtr = {0};
   // matrix_t mtr2 = {0};
   matrix_t mtr3 = {0};
-  int rows = 4;
-  int columns = 4;
+  int rows = 2;
+  int columns = 2;
   // int rows2 = 2;
   // int columns2 = 3;
   double num = 0;
   s21_create_matrix(rows, columns, &mtr);
   // s21_create_matrix(rows2, columns2, &mtr2);
-  // for (int i = 0; i < mtr.rows; i++) {
-  //   for (int j = 0; j < mtr.columns; j++) {
-  // mtr.matrix[0][0] = 0;
-  // if (i == 0) continue;
-  // mtr.matrix[1][0] = 0;
-  // if (i == 1) continue;
-  // mtr.matrix[i][j] = i + 2;
-  //   }
-  // }
-  // for (int i = 0; i < mtr2.rows; i++) {
-  //   for (int j = 0; j < mtr2.columns; j++) {
-  //     mtr2.matrix[i][j] = -j + 2;
-  //   }
-  // }
   mtr.matrix[0][0] = 1;
-  mtr.matrix[0][1] = 50;
-  mtr.matrix[0][2] = -1;
-  mtr.matrix[0][3] = 4;
+  mtr.matrix[0][1] = 2;
+  // mtr.matrix[0][2] = 3;
+  // mtr.matrix[0][3] = 4;
 
-  mtr.matrix[1][0] = 2;
-  mtr.matrix[1][1] = 25;
-  mtr.matrix[1][2] = 144;
-  mtr.matrix[1][3] = 5;
+  mtr.matrix[1][0] = 0;
+  mtr.matrix[1][1] = 4;
+  // mtr.matrix[1][2] = 2;
+  // mtr.matrix[1][3] = 5;
 
-  mtr.matrix[2][0] = 3;
-  mtr.matrix[2][1] = 2;
-  mtr.matrix[2][2] = 4;
-  mtr.matrix[2][3] = 2;
+  // mtr.matrix[2][0] = 5;
+  // mtr.matrix[2][1] = 2;
+  // mtr.matrix[2][2] = 1;
+  // mtr.matrix[2][3] = 2;
 
-  mtr.matrix[3][0] = 3;
-  mtr.matrix[3][1] = 3;
-  mtr.matrix[3][2] = 5;
-  mtr.matrix[3][3] = 2;
+  // mtr.matrix[3][0] = 3;
+  // mtr.matrix[3][1] = 3;
+  // mtr.matrix[3][2] = 5;
+  // mtr.matrix[3][3] = 2;
   // mtr2.matrix[0][0] = 1;
   // mtr2.matrix[0][1] = -1;
   // mtr2.matrix[0][2] = 1;
@@ -78,7 +64,7 @@ int main() {
   printf("RESULT=%d\n", res);  //(res) ? "SUCCESS" : "FAILURE"
   printMatrix(mtr3);
   printf("DETRMINANT=%f\n", num);
-  // s21_remove_matrix(&mtr);
+  s21_remove_matrix(&mtr);
   // s21_remove_matrix(&mtr3);
 
   return 0;
@@ -122,7 +108,7 @@ int s21_eq_matrix(matrix_t *A, matrix_t *B) {
 
 int s21_sum_matrix(matrix_t *A, matrix_t *B, matrix_t *result) {
   int error = 0;
-  error = (A->matrix == NULL || B->matrix == NULL)           ? 1
+  error = (A == NULL || B == NULL)                           ? 1
           : (A->columns != B->columns || A->rows != B->rows) ? 2
                                                              : 0;
   if (!error) {
@@ -141,7 +127,7 @@ int s21_sum_matrix(matrix_t *A, matrix_t *B, matrix_t *result) {
 
 int s21_sub_matrix(matrix_t *A, matrix_t *B, matrix_t *result) {
   int error = 0;
-  error = (A->matrix == NULL || B->matrix == NULL)           ? 1
+  error = (A == NULL || B == NULL)                           ? 1
           : (A->columns != B->columns || A->rows != B->rows) ? 2
                                                              : 0;
   if (!error) {
@@ -160,7 +146,7 @@ int s21_sub_matrix(matrix_t *A, matrix_t *B, matrix_t *result) {
 
 int s21_mult_number(matrix_t *A, double number, matrix_t *result) {
   int error = 0;
-  error = (A->matrix == NULL) ? 1 : 0;
+  error = (A == NULL) ? 1 : 0;
   if (!error) {
     if (!s21_create_matrix(A->rows, A->columns, result)) {
       for (int i = 0; i < A->rows; i++) {
@@ -177,9 +163,7 @@ int s21_mult_number(matrix_t *A, double number, matrix_t *result) {
 
 int s21_mult_matrix(matrix_t *A, matrix_t *B, matrix_t *result) {
   int error = 0;
-  error = (A->matrix == NULL || B->matrix == NULL) ? 1
-          : (A->columns != B->rows)                ? 2
-                                                   : 0;
+  error = (A == NULL || B == NULL) ? 1 : (A->columns != B->rows) ? 2 : 0;
   if (!error) {
     if (!s21_create_matrix(A->rows, B->columns, result)) {
       for (int i = 0; i < A->rows; i++) {
@@ -198,9 +182,7 @@ int s21_mult_matrix(matrix_t *A, matrix_t *B, matrix_t *result) {
 
 int s21_transpose(matrix_t *A, matrix_t *result) {
   int error = 0;
-  error = (A->matrix == NULL || s21_create_matrix(A->columns, A->rows, result))
-              ? 1
-              : 0;
+  error = (A == NULL || s21_create_matrix(A->columns, A->rows, result)) ? 1 : 0;
   if (!error) {
     for (int i = 0; i < A->rows; i++) {
       for (int j = 0; j < A->columns; j++) {
@@ -211,46 +193,77 @@ int s21_transpose(matrix_t *A, matrix_t *result) {
   return error;
 }
 
+int s21_calc_complements(matrix_t *A, matrix_t *result) {
+  int error = 0;
+  error = (A == NULL) ? 1 : (A->rows != A->columns) ? 2 : 0;
+  if (!error) {
+    matrix_t tmp = *A;
+    matrix_t tmp2 = {0};
+    s21_create_matrix(A->rows, A->columns, result);
+    s21_create_matrix(A->rows, A->columns, &tmp);
+    for (int i = 0; i < A->rows; i++) {
+      for (int j = 0; j < A->columns; j++) {
+        if (j == 0 && i == 0) GetMiniMatr(&tmp, i, j, &tmp2);
+        GetMiniMatr(&tmp2, i, j, &tmp2);
+        s21_determinant(&tmp2, &result->matrix[i][j]);
+        s21_remove_matrix(&tmp2);
+        // s21_remove_matrix(&tmp);
+      }
+    }
+    // s21_remove_matrix(&tmp);
+  }
+  return error;
+}
+
 int s21_determinant(matrix_t *A, double *result) {
   int error = 0, check = 0;
-  *result = 1;
+  error = (A == NULL || result == NULL) ? 1 : (A->rows != A->columns) ? 2 : 0;
   double quotient = 0, sign = 1;
-  for (int i = 0; i < A->rows; i++) {
-    if (A->matrix[i][i] == 0) {
-      check = swapStr(A, i, i, A);
-    }
-    if (!check) {
-      sign = -sign;
-      for (int j = i + 1; j < A->rows; j++) {
-        quotient = A->matrix[j][i] / A->matrix[i][i];
-        for (int x = i; x < A->columns; x++) {
-          double kkk = A->matrix[j][x] - quotient * A->matrix[i][x];
-          A->matrix[j][x] = kkk;
+  if (!error) {
+    *result = 1;
+    if (A->rows == 1) {
+      *result = A->matrix[0][0];
+    } else if (A->rows == 2) {
+      *result =
+          A->matrix[0][0] * A->matrix[1][1] - A->matrix[0][1] * A->matrix[1][0];
+    } else {
+      for (int i = 0; i < A->rows; i++) {
+        if (A->matrix[i][i] == 0) {
+          check = swapStr(A, i, i, A);
+          sign = -sign;
+        }
+        if (!check) {
+          for (int j = i + 1; j < A->rows; j++) {
+            quotient = A->matrix[j][i] / A->matrix[i][i];
+            for (int x = i; x < A->columns; x++) {
+              double kkk = A->matrix[j][x] - quotient * A->matrix[i][x];
+              A->matrix[j][x] = kkk;
+            }
+          }
+          *result *= A->matrix[i][i];
+        } else {
+          *result = 0;
+          break;
         }
       }
-    } else {
-      *result = 0;
-      break;
+      if (!check) *result *= sign;
     }
   }
-  for (int i = 0; i < A->rows; i++) {
-    *result *= A->matrix[i][i];
-  }
-  // *result *= sign;
   return error;
 }
 
 /*__________________ANOTHER_FUNCTIONS___________________*/
 void GetMiniMatr(matrix_t *A, int x, int y, matrix_t *result) {
-  int di, dj;
-  di = 0;
+  int di = 0, dj;
+  double lll = 0;
   s21_create_matrix(A->rows - 1, A->columns - 1, result);
   for (int i = 0; i < (A->rows - 1); i++) {  // проверка индекса строки
     if (i == x) di = 1;
     dj = 0;
     for (int j = 0; j < (A->rows - 1); j++) {  // проверка индекса столбца
       if (j == y) dj = 1;
-      result->matrix[i][j] = A->matrix[i + di][j + dj];
+      lll = A->matrix[i + di][j + dj];
+      result->matrix[i][j] = lll;
     }
   }
 }
@@ -261,6 +274,7 @@ int swapStr(matrix_t *A, int x, int y, matrix_t *result) {
   *result = *A;  //   внимание
   for (i = x; i < A->rows; i++) {
     if (A->matrix[i][y] != 0) {
+      error = 0;
       break;
     } else {
       error = 1;
@@ -286,26 +300,6 @@ void printMatrix(matrix_t src) {
     printf("\n");
   }
 }
-
-// int s21_calc_complements(matrix_t *A, matrix_t *result) {
-//   int error = 0;
-//   error = (A->matrix == NULL) ? 1 : (A->rows != A->columns) ? 2 : 0;
-//   if (!error) {
-//     matrix_t tmp = *A;
-//     s21_create_matrix(A->rows, A->columns, result);
-//     s21_create_matrix(A->rows, A->columns, &tmp);
-//     for (int i = 0; i < A->rows; i++) {
-//       for (int j = 0; j < A->columns; j++) {
-//         GetMiniMatr(&tmp, i, j, &tmp);
-//         // s21_create_matrix(tmp.rows - 1, tmp.columns - 1, &tmp);
-//         s21_determinant(&tmp, &result->matrix[i][j]);
-//         // s21_remove_matrix(&tmp);
-//       }
-//     }
-//     s21_remove_matrix(&tmp);
-//   }
-//   return error;
-// }
 
 // int s21_determinant(matrix_t *A, double *result) {
 //   int error = 0;
