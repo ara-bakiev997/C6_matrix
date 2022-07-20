@@ -209,8 +209,8 @@ int s21_calc_complements(matrix_t *A, matrix_t *result) {
         GetMiniMatr(A, i, j, &tmp);
         s21_determinant(&tmp, &result->matrix[i][j]);
         s21_remove_matrix(&tmp);
+        if ((j + i) % 2 == 0) sign = -sign;
         result->matrix[i][j] = sign * result->matrix[i][j];
-        sign = -sign;
       }
     }
   }
