@@ -287,12 +287,12 @@ int s21_inverse_matrix(matrix_t *A, matrix_t *result) {
       error = 2;
     } else {
       matrix_t tmp;
-      // matrix_t tmp1;
-      // printf("%lf\n", determinant);
       s21_calc_complements(A, &tmp);
       s21_transpose(&tmp, result);
+      s21_remove_matrix(&tmp);
       s21_mult_number(result, (1 / determinant), &tmp);
       *result = tmp;
+      s21_remove_matrix(&tmp);
     }
   }
 
