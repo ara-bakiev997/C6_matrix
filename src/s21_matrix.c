@@ -15,32 +15,32 @@ int main() {
   matrix_t mtr = {0};
   // matrix_t mtr2 = {0};
   matrix_t mtr3 = {0};
-  int rows = 3;
-  int columns = 3;
+  int rows = 4;
+  int columns = 4;
   // int rows2 = 2;
   // int columns2 = 3;
   // double num = 0;
   s21_create_matrix(rows, columns, &mtr);
   // s21_create_matrix(rows2, columns2, &mtr2);
-  mtr.matrix[0][0] = 1;
-  mtr.matrix[0][1] = 2;
-  mtr.matrix[0][2] = 3;
-  // mtr.matrix[0][3] = 4;
+  mtr.matrix[0][0] = 2;
+  mtr.matrix[0][1] = 5;
+  mtr.matrix[0][2] = 7;
+  mtr.matrix[0][3] = 4;
 
-  mtr.matrix[1][0] = 0;
-  mtr.matrix[1][1] = 4;
-  mtr.matrix[1][2] = 2;
-  // mtr.matrix[1][3] = 5;
+  mtr.matrix[1][0] = 6;
+  mtr.matrix[1][1] = 3;
+  mtr.matrix[1][2] = 4;
+  mtr.matrix[1][3] = 5;
 
   mtr.matrix[2][0] = 5;
-  mtr.matrix[2][1] = 2;
-  mtr.matrix[2][2] = 1;
-  // mtr.matrix[2][3] = 2;
+  mtr.matrix[2][1] = -2;
+  mtr.matrix[2][2] = -3;
+  mtr.matrix[2][3] = 2;
 
-  // mtr.matrix[3][0] = 3;
-  // mtr.matrix[3][1] = 3;
-  // mtr.matrix[3][2] = 5;
-  // mtr.matrix[3][3] = 2;
+  mtr.matrix[3][0] = 3;
+  mtr.matrix[3][1] = 3;
+  mtr.matrix[3][2] = 5;
+  mtr.matrix[3][3] = 2;
   // mtr2.matrix[0][0] = 1;
   // mtr2.matrix[0][1] = -1;
   // mtr2.matrix[0][2] = 1;
@@ -56,9 +56,11 @@ int main() {
   // int res = s21_sub_matrix(&mtr, &mtr2, &mtr3);
   // int res = s21_mult_number(&mtr, num, &mtr3);
   // int res = s21_mult_matrix(&mtr, &mtr2, &mtr3);
-  // int res = s21_transpose(&mtr, &mtr3);
-  int res = s21_calc_complements(&mtr, &mtr3);
+  // int res = s21_calc_complements(&mtr, &mtr3);
+  // s21_calc_complements(&mtr, &mtr2);
+  // res = s21_transpose(&mtr2, &mtr3);
   // int res = s21_determinant(&mtr, &num);
+  int res = s21_inverse_matrix(&mtr, &mtr3);
   // int res = swapStr(&mtr, 0, 0, &mtr3);
 
   printf("RESULT=%d\n", res);  //(res) ? "SUCCESS" : "FAILURE"
@@ -227,28 +229,58 @@ int s21_determinant(matrix_t *A, double *result) {
       *result =
           A->matrix[0][0] * A->matrix[1][1] - A->matrix[0][1] * A->matrix[1][0];
     } else {
+      matrix_t tmp;
+      s21_create_matrix(A->rows, A->columns, &tmp);
       for (int i = 0; i < A->rows; i++) {
-        if (A->matrix[i][i] == 0) {
-          check = swapStr(A, i, i, A);
+        for (int j = 0; j < A->columns; j++) {
+          tmp.matrix[i][j] = A->matrix[i][j];
+        }
+      }
+      for (int i = 0; i < tmp.rows; i++) {
+        if (tmp.matrix[i][i] == 0) {
+          check = swapStr(&tmp, i, i, &tmp);
           sign = -sign;
         }
         if (!check) {
-          for (int j = i + 1; j < A->rows; j++) {
-            quotient = A->matrix[j][i] / A->matrix[i][i];
-            for (int x = i; x < A->columns; x++) {
-              double kkk = A->matrix[j][x] - quotient * A->matrix[i][x];
-              A->matrix[j][x] = kkk;
+          for (int j = i + 1; j < tmp.rows; j++) {
+            quotient = tmp.matrix[j][i] / tmp.matrix[i][i];
+            for (int x = i; x < tmp.columns; x++) {
+              double kkk = tmp.matrix[j][x] - quotient * tmp.matrix[i][x];
+              tmp.matrix[j][x] = kkk;
             }
           }
-          *result *= A->matrix[i][i];
+          *result *= tmp.matrix[i][i];
         } else {
           *result = 0;
           break;
         }
       }
       if (!check) *result *= sign;
+      s21_remove_matrix(&tmp);
     }
   }
+  return error;
+}
+
+int s21_inverse_matrix(matrix_t *A, matrix_t *result) {
+  int error = 0;
+  double determinant;
+  error = (A == NULL) ? 1 : (A->rows != A->columns) ? 2 : 0;
+  if (!error) {
+    s21_determinant(A, &determinant);
+    if (!determinant) {
+      error = 2;
+    } else {
+      matrix_t tmp;
+      // matrix_t tmp1;
+      // printf("%lf\n", determinant);
+      s21_calc_complements(A, &tmp);
+      s21_transpose(&tmp, result);
+      s21_mult_number(result, (1 / determinant), &tmp);
+      *result = tmp;
+    }
+  }
+
   return error;
 }
 
