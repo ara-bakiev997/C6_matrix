@@ -1,5 +1,6 @@
 #include "s21_matrix.h"
 
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -15,8 +16,8 @@ int main() {
   matrix_t mtr = {0};
   // matrix_t mtr2 = {0};
   matrix_t mtr3 = {0};
-  int rows = 4;
-  int columns = 4;
+  int rows = 5;
+  int columns = 5;
   // int rows2 = 2;
   // int columns2 = 3;
   // double num = 0;
@@ -26,21 +27,32 @@ int main() {
   mtr.matrix[0][1] = 5;
   mtr.matrix[0][2] = 7;
   mtr.matrix[0][3] = 4;
+  mtr.matrix[0][4] = 5;
 
   mtr.matrix[1][0] = 6;
   mtr.matrix[1][1] = 3;
   mtr.matrix[1][2] = 4;
   mtr.matrix[1][3] = 5;
+  mtr.matrix[1][4] = 3;
 
   mtr.matrix[2][0] = 5;
   mtr.matrix[2][1] = -2;
   mtr.matrix[2][2] = -3;
   mtr.matrix[2][3] = 2;
+  mtr.matrix[2][4] = 1;
 
   mtr.matrix[3][0] = 3;
   mtr.matrix[3][1] = 3;
   mtr.matrix[3][2] = 5;
   mtr.matrix[3][3] = 2;
+  mtr.matrix[3][4] = 6;
+
+  mtr.matrix[4][0] = 9;
+  mtr.matrix[4][1] = 8;
+  mtr.matrix[4][2] = 5;
+  mtr.matrix[4][3] = 3;
+  mtr.matrix[4][4] = 5;
+
   // mtr2.matrix[0][0] = 1;
   // mtr2.matrix[0][1] = -1;
   // mtr2.matrix[0][2] = 1;
@@ -91,9 +103,12 @@ int s21_create_matrix(int rows, int columns, matrix_t *result) {
 }
 
 void s21_remove_matrix(matrix_t *A) {
-  free(A->matrix);
-  A->rows = 0;
-  A->columns = 0;
+  if (A) {
+    free(A->matrix);
+    A->matrix = NULL;
+    A->rows = 0;
+    A->columns = 0;
+  }
 }
 
 int s21_eq_matrix(matrix_t *A, matrix_t *B) {
@@ -209,7 +224,7 @@ int s21_calc_complements(matrix_t *A, matrix_t *result) {
         GetMiniMatr(A, i, j, &tmp);
         s21_determinant(&tmp, &result->matrix[i][j]);
         s21_remove_matrix(&tmp);
-        if ((j + i) % 2 == 0) sign = -sign;
+        sign = pow(-1, i + j);
         result->matrix[i][j] = sign * result->matrix[i][j];
       }
     }
