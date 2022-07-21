@@ -9,7 +9,7 @@ int s21_create_matrix(int rows, int columns, matrix_t *result) {
   int error = 0;
   result->matrix = NULL;
   double *lenStr = NULL;
-  if (rows <= 0 || columns <= 0) {
+  if (rows <= 0 && columns <= 0) {
     error = 1;
   }
   if (!error) {
@@ -231,10 +231,10 @@ int s21_inverse_matrix(matrix_t *A, matrix_t *result) {
 /*__________________ANOTHER_FUNCTIONS___________________*/
 void GetMiniMatr(matrix_t *A, int x, int y, matrix_t *result) {
   int di = 0, dj;
-  for (int i = 0; i < (A->rows - 1); i++) {
+  for (int i = 0; i < (A->rows - 1); i++) {  // проверка индекса строки
     if (i == x) di = 1;
     dj = 0;
-    for (int j = 0; j < (A->rows - 1); j++) {
+    for (int j = 0; j < (A->rows - 1); j++) {  // проверка индекса столбца
       if (j == y) dj = 1;
       result->matrix[i][j] = A->matrix[i + di][j + dj];
     }

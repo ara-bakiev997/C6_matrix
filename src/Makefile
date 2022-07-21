@@ -27,7 +27,7 @@ test_:
 
 git:
 	git add Makefile matrix_test.c s21_matrix.c s21_matrix.h
-	git commit -m "all"
+	git commit -m "fin"
 	git push origin tysaneno
 
 s21_matrix.a: clean $(OBJ)
