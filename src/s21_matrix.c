@@ -143,16 +143,23 @@ int s21_calc_complements(matrix_t *A, matrix_t *result) {
   if (!error) {
     matrix_t tmp;
     double sign = 1;
-    s21_create_matrix(A->rows, A->columns, result);
-    for (int i = 0; i < A->rows; i++) {
-      for (int j = 0; j < A->columns; j++) {
-        s21_create_matrix(A->rows - 1, A->columns - 1, &tmp);
-        GetMiniMatr(A, i, j, &tmp);
-        s21_determinant(&tmp, &result->matrix[i][j]);
-        s21_remove_matrix(&tmp);
-        sign = pow(-1, i + j);
-        result->matrix[i][j] = sign * result->matrix[i][j];
+    if (!s21_create_matrix(A->rows, A->columns, result)) {
+      if (A->rows == 1) {
+        result->matrix[0][0] = A->matrix[0][0];
+      } else {
+        for (int i = 0; i < A->rows; i++) {
+          for (int j = 0; j < A->columns; j++) {
+            s21_create_matrix(A->rows - 1, A->columns - 1, &tmp);
+            GetMiniMatr(A, i, j, &tmp);
+            s21_determinant(&tmp, &result->matrix[i][j]);
+            s21_remove_matrix(&tmp);
+            sign = pow(-1, i + j);
+            result->matrix[i][j] = sign * result->matrix[i][j];
+          }
+        }
       }
+    } else {
+      error = 1;
     }
   }
   return error;
@@ -227,10 +234,10 @@ int s21_inverse_matrix(matrix_t *A, matrix_t *result) {
 /*__________________ANOTHER_FUNCTIONS___________________*/
 void GetMiniMatr(matrix_t *A, int x, int y, matrix_t *result) {
   int di = 0, dj;
-  for (int i = 0; i < (A->rows - 1); i++) {  // проверка индекса строки
+  for (int i = 0; i < (A->rows - 1); i++) {
     if (i == x) di = 1;
     dj = 0;
-    for (int j = 0; j < (A->rows - 1); j++) {  // проверка индекса столбца
+    for (int j = 0; j < (A->rows - 1); j++) {
       if (j == y) dj = 1;
       result->matrix[i][j] = A->matrix[i + di][j + dj];
     }
