@@ -17,7 +17,7 @@ clean:
 	rm -rf *.o *.a *.so *.gcda *.gcno *.gch rep.info *.html *.css test report *.txt s21_matrix *.cfg *a.out *.dSYM
 
 test: s21_matrix.a
-	$(GCC) matrix_test.c $(SOURCE) -o test $(CHECK_H) $(GCOVFLAGS)
+	$(GCC) matrix_test.c -lcheck $(SOURCE) -o test $(CHECK_H) $(GCOVFLAGS)
 	./test
 
 test_:

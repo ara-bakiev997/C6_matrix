@@ -4,106 +4,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-/*Все операции (кроме сравнения матриц) должны возвращать результирующий код:
-0 - OK
-1 - Ошибка, некорректная матрица
-2 - Ошибка вычисления (несовпадающие размеры матриц; матрица, для которой нельзя
-провести вычисления и т.д.)
-Если 2 строки или 2 столбца матрицы одинаковые, то детерминант равен 0
-*/
-
-int main() {
-  matrix_t mtr = {0};
-  matrix_t mtr2 = {0};
-  // matrix_t mtr3 = {0};
-  int rows = 4;
-  int columns = 4;
-  int rows2 = 4;
-  int columns2 = 4;
-  // double num = 0;
-  s21_create_matrix(rows, columns, &mtr);
-  s21_create_matrix(rows2, columns2, &mtr2);
-  mtr.matrix[0][0] = 2;
-  mtr.matrix[0][1] = 5;
-  mtr.matrix[0][2] = 7;
-  mtr.matrix[0][3] = 4;
-  // mtr.matrix[0][4] = 5;
-
-  mtr.matrix[1][0] = 6;
-  mtr.matrix[1][1] = 3;
-  mtr.matrix[1][2] = 4;
-  mtr.matrix[1][3] = 5;
-  // mtr.matrix[1][4] = 3;
-
-  mtr.matrix[2][0] = 5;
-  mtr.matrix[2][1] = -2;
-  mtr.matrix[2][2] = -3;
-  mtr.matrix[2][3] = 2;
-  // mtr.matrix[2][4] = 1;
-
-  mtr.matrix[3][0] = 3;
-  mtr.matrix[3][1] = 3;
-  mtr.matrix[3][2] = 5;
-  mtr.matrix[3][3] = 2;
-  // mtr.matrix[3][4] = 6;
-
-  mtr2.matrix[0][0] = 2;
-  mtr2.matrix[0][1] = 5;
-  mtr2.matrix[0][2] = 7;
-  mtr2.matrix[0][3] = 4;
-  // mtr.matrix[0][4] = 5;
-
-  mtr2.matrix[1][0] = 6;
-  mtr2.matrix[1][1] = 3;
-  mtr2.matrix[1][2] = 4;
-  mtr2.matrix[1][3] = 5;
-  // mtr.matrix[1][4] = 3;
-
-  mtr2.matrix[2][0] = 5;
-  mtr2.matrix[2][1] = -2;
-  mtr2.matrix[2][2] = -3;
-  mtr2.matrix[2][3] = 2;
-  // mtr.matrix[2][4] = 1;
-
-  mtr2.matrix[3][0] = 3;
-  mtr2.matrix[3][1] = 3;
-  mtr2.matrix[3][2] = 5;
-  mtr2.matrix[3][3] = 2;
-  // mtr.matrix[3][4] = 6;
-
-  // printMatrix(mtr);
-  // printf("\n");
-  // printMatrix(mtr2);
-  // printf("\n");
-  // matrix_t *tmp = NULL;
-  // int res = s21_sum_matrix(&mtr, &mtr2, &mtr3);
-  int res = s21_eq_matrix(&mtr, &mtr2);
-  // int res = s21_sub_matrix(&mtr, &mtr2, &mtr3);
-  // int res = s21_mult_number(&mtr, num, &mtr3);
-  // int res = s21_mult_matrix(&mtr, &mtr2, &mtr3);
-  // int res = s21_calc_complements(&mtr, &mtr3);
-  // s21_calc_complements(&mtr, &mtr2);
-  // int res = s21_transpose(&mtr2, &mtr3);
-  // int res = s21_determinant(&mtr, &num);
-  // int res = s21_inverse_matrix(&mtr, &mtr3);
-  // int res = swapStr(&mtr, 0, 0, &mtr3);
-
-  printf("RESULT=%d\n", res);  //(res) ? "SUCCESS" : "FAILURE"
-  // printMatrix(mtr3);
-  // printf("DETRMINANT=%f\n", num);
-  s21_remove_matrix(&mtr);
-  // s21_remove_matrix(&mtr2);
-  s21_remove_matrix(&mtr2);
-
-  return 0;
-}
-
 /*__________________MAIN_FUNCTIONS___________________*/
 int s21_create_matrix(int rows, int columns, matrix_t *result) {
   int error = 0;
   result->matrix = NULL;
   double *lenStr = NULL;
-  if (rows <= 0 && columns <= 0) {
+  if (rows <= 0 || columns <= 0) {
     error = 1;
   }
   if (!error) {
@@ -325,10 +231,10 @@ int s21_inverse_matrix(matrix_t *A, matrix_t *result) {
 /*__________________ANOTHER_FUNCTIONS___________________*/
 void GetMiniMatr(matrix_t *A, int x, int y, matrix_t *result) {
   int di = 0, dj;
-  for (int i = 0; i < (A->rows - 1); i++) {  // проверка индекса строки
+  for (int i = 0; i < (A->rows - 1); i++) {
     if (i == x) di = 1;
     dj = 0;
-    for (int j = 0; j < (A->rows - 1); j++) {  // проверка индекса столбца
+    for (int j = 0; j < (A->rows - 1); j++) {
       if (j == y) dj = 1;
       result->matrix[i][j] = A->matrix[i + di][j + dj];
     }
@@ -356,14 +262,4 @@ int swapStr(matrix_t *A, int x, int y, matrix_t *result) {
     }
   }
   return error;
-}
-
-/*____________________PRINT_FUNCTIONS___________________*/
-void printMatrix(matrix_t src) {
-  for (int i = 0; i < src.rows; i++) {
-    for (int j = 0; j < src.columns; j++) {
-      printf("%lf ", src.matrix[i][j]);
-    }
-    printf("\n");
-  }
 }
