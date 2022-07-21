@@ -73,14 +73,14 @@ START_TEST(matrix_add_sub_test) {
   }
   s21_remove_matrix(&result);
 
-  // for (int i = 0; i < matrix1.rows; i++) {
-  //   for (int j = 0; j < matrix1.columns; j++) {
-  //     srand(i + j);
-  //     matrix1.matrix[i][j] = (double)rand() / (double)rand();
-  //     srand((j + i) * 2);
-  //     matrix2.matrix[i][j] = (double)rand() / (double)rand();
-  //   }
-  // }
+  for (int i = 0; i < matrix1.rows; i++) {
+    for (int j = 0; j < matrix1.columns; j++) {
+      srand(i + j);
+      matrix1.matrix[i][j] = (double)rand() / (double)rand();
+      srand((j + i) * 2);
+      matrix2.matrix[i][j] = (double)rand() / (double)rand();
+    }
+  }
 
   s21_sum_matrix(&matrix2, &matrix1, &result);
   for (int i = 0; i < matrix2.rows; i++) {
