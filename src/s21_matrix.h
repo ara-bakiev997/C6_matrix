@@ -3,6 +3,7 @@
 
 #define SUCCESS 1
 #define FAILURE 0
+#define EPS 1e-7
 
 typedef struct matrix_struct {
   double **matrix;
