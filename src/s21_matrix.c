@@ -9,7 +9,7 @@ int s21_create_matrix(int rows, int columns, matrix_t *result) {
   int error = 0;
   result->matrix = NULL;
   double *lenStr = NULL;
-  if (rows <= 0 && columns <= 0) {
+  if (rows <= 0 || columns <= 0) {
     error = 1;
   }
   if (!error) {
